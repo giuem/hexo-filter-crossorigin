@@ -7,7 +7,22 @@
   "files": [
     "lib"
   ],
-  "types": "lib/index.d.ts",
+  "keywords": [
+    "hexo",
+    "hexo-plugin",
+    "hexo-filter",
+    "crossorigin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/giuem/hexo-filter-crossorign.git"
+  },
+  "homepage": "https://github.com/giuem/hexo-filter-crossorign#readme",
+  "author": {
+    "name": "giuem",
+    "email": "giuemcom+npm@gmail.com",
+    "url": "https://giuem.com"
+  },
   "scripts": {
     "test": "jest",
     "build": "tsc -p tsconfig.json"
