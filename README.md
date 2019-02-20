@@ -1,6 +1,7 @@
 # hexo-filter-crossorigin
 
 [![status](https://img.shields.io/travis/com/giuem/hexo-filter-crossorigin.svg?style=flat)](https://travis-ci.com/giuem/hexo-filter-crossorign)
+[![npm version](https://img.shields.io/npm/v/hexo-filter-crossorigin.svg)](https://www.npmjs.com/package/hexo-filter-crossorigin)
 
 Append [crossorigin](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes) attribute to HTML elements (`<img>`, `<video>`, etc).
 
