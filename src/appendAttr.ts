@@ -48,8 +48,18 @@ export default function(rawHtml: string, tags: Tag[]): string {
     }
 
     $(tag.name).each((i, el) => {
-      const src = tag.attrs!.map(v => $(el).attr(v)).find(v => !!v);
-      if (!src || !matchDomain(src, tag.domains)) return;
+      // match all no-empty attrs
+      if (
+        tag
+          .attrs!.reduce<boolean[]>((prev, curr) => {
+            if ($(el).attr(curr)) {
+              prev.push(matchDomain($(el).attr(curr), tag.domains));
+            }
+            return prev;
+          }, [])
+          .some(v => !v)
+      )
+        return;
 
       $(el).attr("crossorigin", attr);
     });
