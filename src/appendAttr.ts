@@ -4,9 +4,10 @@ export interface Tag {
   name: string;
   crossorigin: boolean | "anonymous" | "use-credentials";
   domains?: string[];
+  attrs?: string[];
 }
 
-export function getValue(
+export function getCrossOriginValue(
   value: Tag["crossorigin"]
 ): false | "anonymous" | "use-credentials" {
   if (typeof value === "undefined") return false;
@@ -38,17 +39,21 @@ export default function(rawHtml: string, tags: Tag[]): string {
     decodeEntities: false
   });
 
-  tags.forEach((tag) => {
-    const attr = getValue(tag.crossorigin);
+  tags.forEach(tag => {
+    const attr = getCrossOriginValue(tag.crossorigin);
     if (!attr) return;
 
+    if (!tag.attrs) {
+      tag.attrs = ["src", "data-src", "href"];
+    }
+
     $(tag.name).each((i, el) => {
-      const src = $(el).attr('src') || $(el).attr('href');
+      const src = tag.attrs!.map(v => $(el).attr(v)).find(v => !!v);
       if (!src || !matchDomain(src, tag.domains)) return;
 
-      $(el).attr('crossorigin', attr)
-    })
-  })
+      $(el).attr("crossorigin", attr);
+    });
+  });
 
   const html = $.html();
   if (!html) {

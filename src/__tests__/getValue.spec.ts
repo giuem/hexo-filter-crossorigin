@@ -1,4 +1,4 @@
-import { getValue } from "../appendAttr";
+import { getCrossOriginValue } from "../appendAttr";
 
 test("getValue", () => {
   [
@@ -8,6 +8,6 @@ test("getValue", () => {
     ["anonymous", "anonymous"],
     ["use-credentials", "use-credentials"]
   ].forEach(([input, output]) => {
-    expect((getValue as any)(input)).toBe(output);
+    expect((getCrossOriginValue as any)(input)).toBe(output);
   });
 });

@@ -11,13 +11,18 @@ See [https://developers.google.com/web/tools/workbox/guides/handle-third-party-r
 ## Config
 
 ``` yaml
+# _config.yml
+
 filter_crossorigin:
-  - name: img # tag name
-    crossorigin: true # 
+  - name: img
+    crossorigin: true
     domains:
       - unpkg.com
+    attrs:
+      - src
 ```
 
-* **name**: tag name
-* **crossorigin**: true(alias of anonymous) | false | anonymous | use-credentials
+* **name**: tag name.
+* **crossorigin**: true (alias of anonymous) | false | anonymous | use-credentials.
 * **domains**: optional. If not provided, all elements that match tag name will be affected.
+* **attrs**: optional. Tag attributes to match domains. Default to `src`, `data-src`, `href`.

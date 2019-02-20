@@ -7,7 +7,8 @@ const tags = [
   {
     name: "img",
     crossorigin: true,
-    domains
+    domains,
+    attrs: ["src", "data-src"]
   },
   {
     name: "video",
@@ -23,6 +24,7 @@ const tags = [
 const tests = [
   [`<img src="//a.com/1.jpg">`, true],
   [`<img src="//a.com/1.jpg" crossorigin>`, true],
+  [`<img data-src="//a.com/1.jpg">`, true],
   [`<img src="https://a.com/1.jpg">`, true],
   [`<img src="https://b.com/1.jpg">`, false],
   [`<img src="http://a.com/1.jpg">`, true],
