@@ -23,7 +23,7 @@ filter_crossorigin:
       - src
 ```
 
-* **name**: tag name.
+* **name**: selectors (such as `img.lazyload` or `link[rel="stylesheet"]`).
 * **crossorigin**: true (alias of anonymous) | false | anonymous | use-credentials.
 * **domains**: optional. If not provided, all elements that match tag name will be affected.
 * **attrs**: optional. Tag attributes to match domains. Default to `src`, `data-src`, `href`.
