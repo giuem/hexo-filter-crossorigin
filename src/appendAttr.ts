@@ -36,16 +36,13 @@ export default function appendAttr(rawHtml: string, tags: Tag[]): string {
     const crossoriginValue = getCrossOriginValue(tag.crossorigin);
     if (!crossoriginValue) return;
 
-    if (!tag.attrs) {
-      tag.attrs = ["src", "data-src", "href"];
-    }
-
     $(tag.name).each((i, el) => {
-      // get all no-empty domain
+      // get all no-empty links
       const links = (tag.attrs || ["src", "data-src", "href"])
         .map(attr => $(el).attr(attr))
         .filter(Boolean);
 
+      // each links should match domains
       for (const link of links) {
         if (!matchDomain(link, tag.domains)) return;
       }
