@@ -19,19 +19,12 @@ export function getCrossOriginValue(
 }
 
 export function matchDomain(src: string, domains?: Tag["domains"]): boolean {
-  return domains
-    ? domains
-        .reduce<string[]>((pre, domain) => {
-          return pre.concat([
-            `https://${domain}`,
-            `http://${domain}`,
-            `//${domain}`
-          ]);
-        }, [])
-        .some(prefix => {
-          return src.indexOf(prefix) === 0;
-        })
-    : true;
+  if (!domains) return true;
+  const prefixs = domains.reduce<string[]>((pre, domain) => {
+    return pre.concat([`https://${domain}`, `http://${domain}`, `//${domain}`]);
+  }, []);
+
+  return prefixs.some(prefix => src.indexOf(prefix) === 0);
 }
 
 export default function(rawHtml: string, tags: Tag[]): string {
@@ -40,8 +33,8 @@ export default function(rawHtml: string, tags: Tag[]): string {
   });
 
   tags.forEach(tag => {
-    const attr = getCrossOriginValue(tag.crossorigin);
-    if (!attr) return;
+    const crossoriginValue = getCrossOriginValue(tag.crossorigin);
+    if (!crossoriginValue) return;
 
     if (!tag.attrs) {
       tag.attrs = ["src", "data-src", "href"];
@@ -49,19 +42,15 @@ export default function(rawHtml: string, tags: Tag[]): string {
 
     $(tag.name).each((i, el) => {
       // match all no-empty attrs
-      if (
-        tag
-          .attrs!.reduce<boolean[]>((prev, curr) => {
-            if ($(el).attr(curr)) {
-              prev.push(matchDomain($(el).attr(curr), tag.domains));
-            }
-            return prev;
-          }, [])
-          .some(v => !v)
-      )
-        return;
+      const domains = (tag.attrs || ["src", "data-src", "href"])
+        .map(attr => $(el).attr(attr))
+        .filter(Boolean);
 
-      $(el).attr("crossorigin", attr);
+      for (const domain of domains) {
+        if (!matchDomain(domain, tag.domains)) return;
+      }
+
+      $(el).attr("crossorigin", crossoriginValue);
     });
   });
 
