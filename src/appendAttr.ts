@@ -1,4 +1,5 @@
 import cheerio from "cheerio";
+import URL from "url";
 
 export interface Tag {
   name: string;
@@ -18,16 +19,15 @@ export function getCrossOriginValue(
   return value;
 }
 
-export function matchDomain(src: string, domains?: Tag["domains"]): boolean {
+export function matchDomain(link: string, domains?: Tag["domains"]): boolean {
   if (!domains) return true;
-  const prefixs = domains.reduce<string[]>((pre, domain) => {
-    return pre.concat([`https://${domain}`, `http://${domain}`, `//${domain}`]);
-  }, []);
+  const hostname = URL.parse(link, false, true).hostname;
+  if (!hostname) return false;
 
-  return prefixs.some(prefix => src.indexOf(prefix) === 0);
+  return domains.some(domain => domain === hostname);
 }
 
-export default function(rawHtml: string, tags: Tag[]): string {
+export default function appendAttr(rawHtml: string, tags: Tag[]): string {
   const $ = cheerio.load(rawHtml, {
     decodeEntities: false
   });
@@ -41,13 +41,13 @@ export default function(rawHtml: string, tags: Tag[]): string {
     }
 
     $(tag.name).each((i, el) => {
-      // match all no-empty attrs
-      const domains = (tag.attrs || ["src", "data-src", "href"])
+      // get all no-empty domain
+      const links = (tag.attrs || ["src", "data-src", "href"])
         .map(attr => $(el).attr(attr))
         .filter(Boolean);
 
-      for (const domain of domains) {
-        if (!matchDomain(domain, tag.domains)) return;
+      for (const link of links) {
+        if (!matchDomain(link, tag.domains)) return;
       }
 
       $(el).attr("crossorigin", crossoriginValue);

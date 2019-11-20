@@ -12,4 +12,6 @@ test("matchDomain", () => {
   expect(matchDomain("//1.com/dafqw", undefined)).toBeTruthy();
   expect(matchDomain("//1.com/dafqw")).toBeTruthy();
   expect(matchDomain("//2.com/dafqw", domains)).toBeFalsy();
+  // data-url
+  expect(matchDomain("data:", domains)).toBeFalsy();
 })
