@@ -9,6 +9,26 @@ Append [crossorigin](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_sett
 
 See [https://developers.google.com/web/tools/workbox/guides/handle-third-party-requests#remember_to_opt-in_to_cors_mod](https://developers.google.com/web/tools/workbox/guides/handle-third-party-requests#remember_to_opt-in_to_cors_mode).
 
+UPDATE (2019-11): To cache thrid part resouces which have CORS configured correctly, you can also write your service workers script like this (notice `fetchOptions` field):
+
+``` javascript
+workbox.routing.registerRoute(
+  new RegExp("https?://cdn.jsdelivr.net/"),
+  new workbox.strategies.CacheFirst({
+    cacheName: "static-resources",
+    fetchOptions: {
+      mode: "cors",
+      credentials: "omit"
+    },
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxAgeSeconds: oneYear
+      })
+    ]
+  })
+);
+```
+
 ## Config
 
 ``` yaml
